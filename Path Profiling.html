@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path Profiling Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    #myChart {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+    <style>
+        .logo {
+            margin: 5px;
+        }
+        .logo img {
+        max-width: 80px;
+        height: fit-content;
+        }
+    </style>
+  </header>
+  <header class="w3-container w3-center w3-padding-48 w3-white">
+    <h1 class="w3-xxxlarge"><b>Path Profiling Calculator</b></h1>
+    <h6>Welcome to Group 1's Path Profiling Calculator.<br><br>Instructions: Fill the boxes below to gather the necessary data<br> note: EC is Earth's Curvature and FC is Fresnel Zone Radius</h6>
+  </header>
+  <style>
+    body {
+      margin: 30;
+      margin-bottom: 0%;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-image: url('pathprof_background.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ddd;
+      margin-top: 50px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 80px;
+      margin-bottom: 30px;
+    }
+
+    h6 {
+      font-size: 0.8rem;
+      color: #ddd;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      line-height: 1.5;
+      text-align: left;
+    }
+    
+  </style>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    input[type=number] {
+      width: 80px;
+    }
+  </style>
+</head>
+<body>
+
+  <table>
+    <style>
+    table {
+        border-collapse: collapse;
+        border: none;
+        text-align: center;
+      }
+    
+      th, td {
+        border: none;
+      }
+    </style>
+    <tr>
+      <th>Frequency (GHz)</th>
+      <style>
+        body {
+            color: #ddd;
+        }
+        input {
+            background-color: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            padding: 5px 10px;
+            box-sizing: border-box;
+            color: white;
+        }
+      </style>
+      <th>Distance</th>
+      <style>
+        body {
+            color: #ddd;
+        }
+        select {
+            font-family: Arial, sans-serif;
+            background-color: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-repeat: no-repeat;
+            background-position: right 5px center;
+            background-size: 20px;
+            width: 10%;
+            box-sizing: border-box;
+        }
+        select option {
+            background-color: transparent;
+            color: #333;
+        }
+      </style>
+      <th>k-factor</th>
+      <style>
+        body {
+            color: #ddd;
+        }
+      </style>
+    </tr>
+    <tr>
+      <td><input type="number" id="frequency" min="0" step="0.1"></td>
+      <td>
+        <input type="number" id="distance" min="0" step="0.1">
+        <select id="distanceUnit">
+          <option value="miles">mi</option>
+          <option value="kilometers">km</option>
+        </select>
+      </td>
+      <td><input type="number" id="kfactor" value="1.3333"></td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <th>Units:</th>
+      <style>
+        body {
+            color: #ddd;
+        }
+      </style>
+      <td>
+        <select id="units">
+          <option value="feet">ft</option>
+          <option value="meters">m</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <table id="dataTable1">
+    <thead>
+      <tr>
+        <th>Elevation</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+            input {
+                text-align: center;
+            }
+          </style>
+        <th>Obstacle Height</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>Growth Clearance</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>d1</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>d2</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>EC</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>FC</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>Total Elevation</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>Earth's Curvature</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>Fresnel Clearance</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>Total Height</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="number" id="elevation1" min="0" step="0.1"></td>
+        <td><input type="number" id="obstacle_height1" min="0" step="0.1"></td>
+        <td><input type="number" id="growth_clearance1" min="0" step="0.1"></td>
+        <td><input type="number" id="1d1" min="0" step="0.1"></td>
+        <td><input type="number" id="1d2" min="0" step="0.1" readonly></td>
+        <td><input type="number" id="curvature_clearance1" min="0" step="0.1" readonly></td>
+        <td><input type="number" id="fresnel_clearance1" min="0" step="0.1" readonly></td>
+        <td><input type="number" id="total_elevation1" min="0" step="0.1" readonly></td>
+        <td><input type="number" id="earth_curve" min="0" step="0.1" readonly></td>
+        <td><input type="number" id="fresnel_zclearance" min="0" step="0.1" readonly></td>
+        <td><input type="number" id="total_height1" min="0" step="0.1" readonly></td>
+        <td><button onclick="deleteRow(this)">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button onclick="addRow()">Add Row
+    <style>
+      button {
+            background: linear-gradient(to right, rgba(76, 175, 80, 0.5), rgba(76, 175, 80, 0.8));
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+    </style>
+  </button>
+  <button onclick="calculatePathProfile()">Calculate Path Profile</button>
+
+  <h2>Line of Sight Parameters</h2>
+  <table>
+    <th>Tx Height:</th>
+    <style>
+      body {
+          color: #ddd;
+      }
+    </style>
+    <td><input type="number" id="Tx_Height" min="0" step="0.1"></td>
+    <th>Tx Elevation:</th>
+    <style>
+      body {
+          color: #ddd;
+      }
+    </style>
+    <td><input type="number" id="Tx_Elevation" min="0" step="0.1"></td>
+    <th>Rx Height:</th>
+    <style>
+      body {
+          color: #ddd;
+      }
+    </style>
+    <td><input type="number" id="Rx_Height" min="0" step="0.1"></td>
+    <th>Rx Elevation:</th>
+    <style>
+      body {
+          color: #ddd;
+      }
+    </style>
+    <td><input type="number" id="Rx_Elevation" min="0" step="0.1"></td>
+  </table>
+  <table id="dataTable2">
+    <thead>
+      <tr>
+        <th>Elevation</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+            input {
+                text-align: center;
+            }
+          </style>
+        <th>Repeater Height</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+        <th>Distance (d1)</th>
+        <style>
+            body {
+                color: #ddd;
+                text-align: center;
+            }
+          </style>
+          </style>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="number" id="elevation2" min="0" step="0.1"></td>
+        <td><input type="number" id="repeater_height" min="0" step="0.1"></td>
+        <td><input type="number" id="2d1" min="0" step="0.1"></td>
+        <td><button onclick="deleteRow(this)">Delete</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button onclick="addRepeater()">Add Repeater</button>
+
+
+  <h2>Path Profile</h2>
+  <button onclick="plotChart()">Plot Chart</button>
+  <canvas id="myChart" width="1450" height="800"></canvas>
+  
+  <script>
+    function calculatePathProfile() {
+      const units = document.getElementById('units').value;
+      const frequency = parseFloat(document.getElementById('frequency').value);
+      const distance = parseFloat(document.getElementById('distance').value);
+      const distanceUnit = document.getElementById('distanceUnit').value;
+      const kFactor = parseFloat(document.getElementById('kfactor').value);
+
+      const table = document.getElementById('dataTable1');
+      const rows = table.getElementsByTagName('tr');
+
+      for (let i = 1; i < rows.length; i++) {
+        const elevation = parseFloat(rows[i].getElementsByTagName('input')[0].value);
+        const obstacleHeight = parseFloat(rows[i].getElementsByTagName('input')[1].value);
+        const growthClearance = parseFloat(rows[i].getElementsByTagName('input')[2].value);
+        const d1 = parseFloat(rows[i].getElementsByTagName('input')[3].value);
+        const d2 = distance - d1;
+
+        const earthCurvatureClearance = (d1 * d2) / (kFactor * (12.75));
+
+        let fresnelFactor = 0;
+        if (distanceUnit === 'miles') {
+          fresnelFactor = 72.1;
+        } else {
+          fresnelFactor = 17.31;
+        }
+
+        const fresnelClearance = 0.6 * fresnelFactor * (Math.sqrt((d1 * d2) / (frequency * (d1 + d2))));
+        const totalElevation = elevation + obstacleHeight + growthClearance;
+        const earthCurveClearance = totalElevation + earthCurvatureClearance
+        const fresnelZoneClearance = totalElevation + fresnelClearance
+        const totalHeight = totalElevation + earthCurvatureClearance + fresnelClearance;
+
+        rows[i].getElementsByTagName('input')[4].value = d2.toFixed(2);
+        rows[i].getElementsByTagName('input')[5].value = earthCurvatureClearance.toFixed(2);
+        rows[i].getElementsByTagName('input')[6].value = fresnelClearance.toFixed(2);
+        rows[i].getElementsByTagName('input')[7].value = totalElevation.toFixed(2);
+        rows[i].getElementsByTagName('input')[8].value = earthCurveClearance.toFixed(2);
+        rows[i].getElementsByTagName('input')[9].value = fresnelZoneClearance.toFixed(2);
+        rows[i].getElementsByTagName('input')[10].value = totalHeight.toFixed(2);
+
+        if (units === 'feet') {
+          rows[i].getElementsByTagName('input')[5].value = (earthCurvatureClearance * 3.28084).toFixed(2);
+          rows[i].getElementsByTagName('input')[6].value = (fresnelClearance * 3.28084).toFixed(2);
+          rows[i].getElementsByTagName('input')[7].value = (totalElevation * 3.28084).toFixed(2);
+          rows[i].getElementsByTagName('input')[8].value = (earthCurveClearance * 3.28084).toFixed(2);
+          rows[i].getElementsByTagName('input')[9].value = (fresnelZoneClearance * 3.28084).toFixed(2);
+          rows[i].getElementsByTagName('input')[10].value = (totalHeight * 3.28084).toFixed(2);
+        }
+      }
+    }
+
+    function addRow() {
+      const table = document.getElementById('dataTable1');
+      const row = table.insertRow(-1);
+
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1);
+      const cell3 = row.insertCell(2);
+      const cell4 = row.insertCell(3);
+      const cell5 = row.insertCell(4);
+      const cell6 = row.insertCell(5);
+      const cell7 = row.insertCell(6);
+      const cell8 = row.insertCell(7);
+      const cell9 = row.insertCell(8);
+      const cell10 = row.insertCell(9);
+      const cell11 = row.insertCell(10);
+      const cell12 = row.insertCell(11);
+
+      cell1.innerHTML = "<input type='number' id='elevation1' min='0' step='0.1'>";
+      cell2.innerHTML = "<input type='number' id='obstacle_height1' min='0' step='0.1'>";
+      cell3.innerHTML = "<input type='number' id='growth_clearance1' min='0' step='0.1'>";
+      cell4.innerHTML = "<input type='number' id='1d1' min='0' step='0.1'>";
+      cell5.innerHTML = "<input type='number' id='1d2' min='0' step='0.1' readonly>";
+      cell6.innerHTML = "<input type='number' id='curvature_clearance1' min='0' step='0.1' readonly>";
+      cell7.innerHTML = "<input type='number' id='fresnel_clearance1' min='0' step='0.1' readonly>";
+      cell8.innerHTML = "<input type='number' id='total_elevation1' min='0' step='0.1' readonly>";
+      cell9.innerHTML = "<input type='number' id='earth_curve' min='0' step='0.1' readonly>";
+      cell10.innerHTML = "<input type='number' id='fresnel_zclearance' min='0' step='0.1' readonly>";
+      cell11.innerHTML = "<input type='number' id='total_height1' min='0' step='0.1' readonly>";
+      cell12.innerHTML = "<button onclick='deleteRow(this)'>Delete</button>";
+    }
+
+    function addRepeater() {
+      const table = document.getElementById('dataTable2');
+      const row = table.insertRow(-1);
+
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1);
+      const cell3 = row.insertCell(2);
+      const cell4 = row.insertCell(3);
+
+      cell1.innerHTML = "<input type='number' id='elevation2' min='0' step='0.1'>";
+      cell2.innerHTML = "<input type='number' id='repeater_height' min='0' step='0.1'>";
+      cell3.innerHTML = "<input type='number' id='2d1' min='0' step='0.1'>";
+      cell4.innerHTML = "<button onclick='deleteRow(this)'>Delete</button>";
+    }
+
+    function deleteRow(btn) {
+      const row = btn.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+    }
+
+    let myChart;
+
+    function plotChart() {
+        
+      // Check if a chart instance exists and destroy it
+      if (myChart) {
+        myChart.destroy();
+      }
+
+    const table1 = document.getElementById('dataTable1'); // Get reference to the first table
+    const table2 = document.getElementById('dataTable2'); // Get reference to the second table
+    const rows1 = table1.getElementsByTagName('tr');
+    const rows2 = table2.getElementsByTagName('tr');
+    
+    const d1Values1 = [];
+    const elevationSS = [];
+    const totalHeightData = [];
+    const earthCurvatureClearanceT = [];
+    const fresnelzoneradiusClearance = [];
+    const totalElevationData = [];
+
+    const d1Values2 = [];
+    const repeaterHeightData = [];
+    const repeaterElevationData = [];
+
+    //First Table Process
+    for (let i = 1; i < rows1.length; i++) {
+        const d11 = parseFloat(rows1[i].getElementsByTagName('input')[3].value);
+        const totalHeight = parseFloat(rows1[i].getElementsByTagName('input')[10].value);
+        const elevationS = parseFloat(rows1[i].getElementsByTagName('input')[0].value);
+        const earthcurve = parseFloat(rows1[i].getElementsByTagName('input')[8].value);
+        const fresnelzC = parseFloat(rows1[i].getElementsByTagName('input')[9].value);
+        const totalElevation = parseFloat(rows1[i].getElementsByTagName('input')[7].value);
+        d1Values1.push(d11);
+        elevationSS.push(elevationS);
+        totalHeightData.push(totalHeight);
+        earthCurvatureClearanceT.push(earthcurve);
+        fresnelzoneradiusClearance.push(fresnelzC);
+        totalElevationData.push(totalElevation);
+    }
+
+    //Second Table Process
+    for (let i = 1; i < rows2.length; i++) {
+        const d12 = parseFloat(rows2[i].getElementsByTagName('input')[2].value);
+        const repeaterHeight = parseFloat(rows2[i].getElementsByTagName('input')[1].value);
+        const repeaterElevation = parseFloat(rows2[i].getElementsByTagName('input')[0].value);
+        d1Values2.push(d12);
+        repeaterHeightData.push(repeaterHeight);
+        repeaterElevationData.push(repeaterElevation);
+    }
+
+    const txHeight = parseFloat(document.getElementById('Tx_Height').value);
+    const txElevation = parseFloat(document.getElementById('Tx_Elevation').value);
+    const rxHeight = parseFloat(document.getElementById('Rx_Height').value);
+    const rxElevation = parseFloat(document.getElementById('Rx_Elevation').value);
+    const distance = parseFloat(document.getElementById('distance').value);
+
+    const txTotalHeight = txHeight + txElevation;
+    const rxTotalHeight = rxHeight + rxElevation;
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+        datasets: [
+            {
+            label: 'Elevation',
+            data: elevationSS.map((height, index) => ({
+                x: d1Values1[index],
+                y: elevationSS[index],
+            })),
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            },
+            {
+            label: 'Total Elevation',
+            data: totalElevationData.map((height, index) => ({
+                x: d1Values1[index],
+                y: totalElevationData[index],
+            })),
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+            },
+            {
+            label: 'Earth Curvature Clearance',
+            data: earthCurvatureClearanceT.map((height, index) => ({
+                x: d1Values1[index],
+                y: earthCurvatureClearanceT[index],
+            })),
+            backgroundColor: 'rgba(255, 206, 86, 0.6)',
+            borderColor: 'rgba(255, 206, 86, 1)',
+            borderWidth: 1,
+            },
+            {
+            label: 'Fresnel Zone Clearance',
+            data: fresnelzoneradiusClearance.map((height, index) => ({
+                x: d1Values1[index],
+                y: fresnelzoneradiusClearance[index],
+            })),
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+            },
+            {
+            label: 'Total Height',
+            data: totalHeightData.map((height, index) => ({
+                x: d1Values1[index],
+                y: totalHeightData[index],
+            })),
+            backgroundColor: 'rgba(0, 128, 0, 0.6)',
+            borderColor: 'rgba(0, 128, 0, 1)',
+            borderWidth: 1,
+            },
+            {
+            label: 'Line of Sight',
+            data: [
+                { x: 0, y: txTotalHeight },
+                ...repeaterHeightData.map((height, index) => ({
+                x: d1Values2[index],
+                y: height + repeaterElevationData[index],
+                })),
+                { x: distance, y: rxTotalHeight },
+            ],
+            backgroundColor: 'rgba(255, 159, 64, 0.6)',
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1,
+            },
+            {
+            label: 'LOS (Without Repeater)',
+            data: [{ x: 0, y: txTotalHeight },
+            { x: distance, y: rxTotalHeight },   
+            ],
+            backgroundColor: 'rgba(153, 102, 255, 0.6)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            borderWidth: 1,
+            pointRadius: 5,
+            pointHoverRadius: 10,
+            },
+        ],
+        },
+        options: {
+        responsive: true,
+        scales: {
+            x: {
+            type: 'linear', // Explicitly set x-axis type to linear
+            title: {
+                display: true,
+                text: 'Distance',
+                font: {
+                size: 14,
+                weight: 'bold',
+                },
+            },
+            },
+            y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Height',
+                font: {
+                size: 14,
+                weight: 'bold',
+                },
+            },
+            },
+        },
+        },
+    });
+    }
+  </script>
+</body>
+</html>
